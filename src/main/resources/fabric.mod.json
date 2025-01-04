@@ -4,29 +4,23 @@
   "version": "${version}",
 
   "name": "${name}",
-  "description": "Template for my fabric mods",
+  "description": "Displays the name from minecraft:custom_payload when protocol error occurred.",
   "authors": [
-    "Fallen_Breath"
+    "ZhuRuoLing"
   ],
   "contact": {
-    "homepage": "https://modrinth.com",
-    "sources": "https://github.com/Fallen-Breath/fabric-mod-template"
+    "sources": "https://github.com/ZhuRuoLing/show-me-your-payload-name"
   },
-
-  "icon": "assets/template_mod/icon.png",
-
+  "icon": "assets/smypn/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "me.fallenbreath.template_mod.TemplateMod"
-    ]
   },
   "mixins": [
-    "template_mod.mixins.json"
+    "smypn.mixins.json"
   ],
 
   "depends": {
-    "fabricloader": ">=0.11.4",
-    "minecraft": "${minecraft_dependency}"
+    "fabricloader": "*",
+    "minecraft": ">=1.20.6"
   }
 }

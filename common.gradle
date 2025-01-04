@@ -15,7 +15,6 @@ repositories {
 	}
 }
 
-// https://github.com/FabricMC/fabric-loader/issues/783
 configurations {
 	modRuntimeOnly.exclude group: 'net.fabricmc', module: 'fabric-loader'
 }
@@ -23,24 +22,13 @@ configurations {
 dependencies {
 	// loom
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	// runtime mods
-//	if (mcVersion < 11904) {
-//		modRuntimeOnly(mcVersion < 11900 ? "com.github.astei:lazydfu:0.1.2" : "com.github.Fallen-Breath:lazydfu:a7cfc44c0c")
-//	}
-//	// [FEATURE] MIXIN_AUDITOR
-//	modRuntimeOnly 'me.fallenbreath:mixin-auditor:0.1.0'
-
-	// dependencies
-//	include(modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_api_version)))
-//	include(modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditionalmixin_version}"))
-//	include(annotationProcessor(implementation("io.github.llamalad7:mixinextras-fabric:${project.mixinextras_version}")))
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
-String MIXIN_CONFIG_PATH = 'template_mod.mixins.json'
-String LANG_DIR = 'assets/template_mod/lang'
+String MIXIN_CONFIG_PATH = 'smypn.mixins.json'
+String LANG_DIR = 'assets/smypn/lang'
 JavaVersion JAVA_COMPATIBILITY
 if (mcVersion >= 12005) {
 	JAVA_COMPATIBILITY = JavaVersion.VERSION_21
@@ -61,15 +49,6 @@ loom {
 		runDir '../../run'
 		vmArgs commonVmArgs
 	}
-//	// [FEATURE] MIXIN_AUDITOR
-//	runs {
-//		def auditVmArgs = [*commonVmArgs, '-DmixinAuditor.audit=true']
-//		serverMixinAudit {
-//			server()
-//			vmArgs auditVmArgs
-//			ideConfigGenerated false
-//		}
-//	}
 }
 
 String modVersionSuffix = ''
@@ -84,14 +63,6 @@ if (System.getenv("BUILD_RELEASE") != "true") {
 }
 String fullModVersion = project.mod_version + modVersionSuffix
 String fullProjectVersion, fullArtifactVersion
-
-// Example version values:
-//   project.mod_version     1.0.3                      (the base mod version)
-//   modVersionSuffix        +build.88                  (use github action build number if possible)
-//   artifactVersionSuffix   -SNAPSHOT
-//   fullModVersion          1.0.3+build.88             (the actual mod version to use in the mod)
-//   fullProjectVersion      v1.0.3-mc1.15.2+build.88   (in build output jar name)
-//   fullArtifactVersion     1.0.3-mc1.15.2-SNAPSHOT    (maven artifact version)
 
 group = project.maven_group
 if (System.getenv("JITPACK") == "true") {
@@ -135,9 +106,6 @@ yamlang {
 	inputDir = LANG_DIR
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = "UTF-8"
 	options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
@@ -191,7 +159,7 @@ license {
 	}
 	ext {
 		name = project.mod_name
-		author = 'Fallen_Breath'
+		author = 'ZhuRuoLing'
 		year = Calendar.getInstance().get(Calendar.YEAR).toString()
 	}
 }
@@ -207,21 +175,7 @@ publishing {
             version = fullArtifactVersion
 		}
 	}
-
-	// select the repositories you want to publish to
 	repositories {
-		// mavenLocal()
-
-//		// [FEATURE] FALLENS_MAVEN
-//		maven {
-//			url = fullArtifactVersion.endsWith("SNAPSHOT") ? "https://maven.fallenbreath.me/snapshots" : "https://maven.fallenbreath.me/releases"
-//			credentials(PasswordCredentials) {
-//				username = 'fallen'
-//				password = System.getenv("FALLENS_MAVEN_TOKEN")
-//			}
-//			authentication {
-//				basic(BasicAuthentication)
-//			}
-//		}
+		mavenLocal()
 	}
 }
